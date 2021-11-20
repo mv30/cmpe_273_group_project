@@ -1,6 +1,6 @@
 # cmpe_273_group_project
 
-## request api:
+#### project flow:
 
 file i/p genrate unique id => put file in s3 with auto key
 
