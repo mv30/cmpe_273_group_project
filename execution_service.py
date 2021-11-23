@@ -11,6 +11,7 @@ from sqlalchemy.sql.operators import op
 from docker_utils import Docker_Utils
 
 from s3utils import S3Utils
+import os
 
 Base = declarative_base()
 
@@ -106,11 +107,15 @@ class ExecutionService:
         entry = self.find_by_token(token)
         if entry.status != 'INIT':
             return
+
         try:
-            
+
+            cwd = os.getcwd()
+            os.mkdir("{}/var/{}".format( cwd, token))
+
             SOURCE_CODE_FILE_PATH = "./var/{}/source_code.py".format(token)
             INPUT_FILE_PATH = "./var/{}/input.txt".format(token)
-            OUTPUT_FILE_PATH = "./var/{}/input.txt".format(token)
+            OUTPUT_FILE_PATH = "./var/{}/output.txt".format(token)
             DOCKER_FILE_PATH = "./var/{}/Dockerfile".format(token)
             DOCKER_BUILD_COMMAND = " docker build -t {} ./var/{} ".format(token, token)
             DOCKER_RUN_COMMAND = " docker run --rm -i {} {} > {} "
@@ -128,10 +133,12 @@ class ExecutionService:
             DOCKER_RUN_COMMAND = DOCKER_RUN_COMMAND.format(token, INPUT_COMMAND_COMPONENT, OUTPUT_FILE_PATH)
             
             # execute command
+            os.system(DOCKER_BUILD_COMMAND)
+            os.system(DOCKER_RUN_COMMAND)
 
             with open(OUTPUT_FILE_PATH, 'rb') as output_file:
                 self.s3_helper.upload_file_ob(output_file, "{}/output.txt".format(token))
-            self.update_record(ExecutionEntry( id=None, token=token, input_provided=None, status='SUCCESS', result=None))
+            self.update_record(ExecutionEntry( id=None, token=token, input_provided=None, status='SUCCESS', dependencies=None))
         
         except:
             self.update_record(ExecutionEntry( id=None, token=token, input_provided=None, status='FAILED', result=None))
@@ -139,29 +146,25 @@ class ExecutionService:
 
 
 if __name__ == '__main__':
-    
-    # version_1
-    # engine = create_engine("postgresql://mayankverma:root@localhost:5432/root_db")
-    # Session = sessionmaker(bind=engine)
-    # session = Session()
-    # res = session.query(ExecutionEntity).all()
-    # res = session.query(ExecutionEntity).first()
 
     execution_service = ExecutionService()
+    res = ExecutionEntry(None, None, None, None, None)
 
-    # version_2
+    # version_1
     # entry = ExecutionEntry( id=None, token='_a_sda_s__qw__wq', status='ENQUEUED', result=None)
     # res = execution_service.create_record(entry)
 
-    # version_3
+    # version_2
     # res = execution_service.find_by_token('_a_sda_s__qw__wq')
 
-
-    #version4
-    entry = ExecutionEntry( id=None, token='_a_sda_s__qw__wq', input_provided=None,status='COMPLETED', dependencies=[])
+    # version_3
+    # entry = ExecutionEntry( id=None, token='_a_sda_s__qw__wq', input_provided=None,status='COMPLETED', dependencies=[])
     # res = execution_service.create_record(entry)
     # res = execution_service.update_record(entry)
-    res = execution_service.find_by_token('_a_sda_s__qw__wq')
+    # res = execution_service.find_by_token('_a_sda_s__qw__wq')
+
+    # version_4
+    execution_service.process_token('as01ass8123asd')
 
     print(type(res))
     print(res.get_entity())

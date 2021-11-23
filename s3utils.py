@@ -25,5 +25,7 @@ class S3Utils:
     
 if __name__ == '__main__':
     s3utils = S3Utils()
-    with open('/Users/mayankverma/CMPE-273/cmpe_273_group_project/pojo/ExecutionDetails.py','rb') as file_ob:
-        s3utils.upload_file_ob( file_ob, 'trials/source_code.py')
+    with open('/Users/mayankverma/CMPE-273/cmpe_273_group_project/test/sample_file.txt','rb') as file_ob:
+        s3utils.upload_file_ob( file_ob, 'trials/sample.text')
+    with open('./test/downloaded_test.txt','wb') as download_file:
+        s3utils.download_file_ob( download_file, 'trials/sample.text')

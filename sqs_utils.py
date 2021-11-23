@@ -56,39 +56,41 @@ class SQS_Utils:
 
 
 if __name__ == '__main__':
+    
     sqs_helper = SQS_Utils('group_nine_executor_queue')
 
     # version1 
 
-    attributes = {
-        'Name': 'Mayank',
-        'University': 'SJSU'
-    }
-    body = {
-        'data': [
-            {
-                'subject': 'CMPE-255',
-                'name': 'Data Mining'
-            },
-            {
-                'subject': 'CMPE-272',
-                'name': 'Platforms'
-            },
-            {
-                'subject': 'CMPE-273',
-                'name': 'Distributed Systems'
-            }
-        ]
-    }
+    # attributes = {
+    #     'Name': 'Mayank',
+    #     'University': 'SJSU'
+    # }
+    # body = {
+    #     'data': [
+    #         {
+    #             'subject': 'CMPE-255',
+    #             'name': 'Data Mining'
+    #         },
+    #         {
+    #             'subject': 'CMPE-272',
+    #             'name': 'Platforms'
+    #         },
+    #         {
+    #             'subject': 'CMPE-273',
+    #             'name': 'Distributed Systems'
+    #         }
+    #     ]
+    # }
     # sqs_helper.send_message(attributes, body)
 
     # version 2
 
-    messages = sqs_helper.receive_messages()
+    # messages = sqs_helper.receive_messages()
     
-    for message in messages:
-        attributes, body = sqs_helper.unpack_message(message)
-        print(" message_attributes:{} message_body:{} ".format( attributes, body))
+    # for message in messages:
+    #     attributes, body = sqs_helper.unpack_message(message)
+    #     print(" message_attributes:{} message_body:{} ".format( attributes, body))
+    #     sqs_helper.delete_messsage(message)
     
     # for message in messages:
     #     print(" message_id:{} message_attributes:{} message_body:{} ".format(message.message_id, message.message_attributes, message.body))

@@ -6,11 +6,10 @@ from configparser import ConfigParser
 
 config_parser = ConfigParser()
 config_parser.read('config.ini')
-
-AWS_SQS_QUEUE_NAME = config_parser.read('AWS_RESOURCES','AWS_SQS_QUEUE_NAME')
+AWS_SQS_QUEUE_NAME = config_parser.get('AWS_RESOURCES','AWS_SQS_QUEUE_NAME')
 
 s3_helper = S3Utils()
-sqs_helper = SQS_Utils()
+sqs_helper = SQS_Utils(AWS_SQS_QUEUE_NAME)
 execution_helper = ExecutionService()
 app = Flask(__name__)
 
