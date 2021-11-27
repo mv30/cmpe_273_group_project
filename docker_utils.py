@@ -6,6 +6,6 @@ class Docker_Utils:
         file.write('WORKDIR /app/ \n\n')
         file.write('COPY . . \n\n')
         for dependency in dependencies:
-            file.write("RUN pip install {}\n\n".format(dependency))
+            file.write('RUN pip install "{}"\n\n'.format(dependency))
         file.write('CMD [ "python3","source_code.py"]')
         file.close()

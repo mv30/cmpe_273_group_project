@@ -1,3 +1,4 @@
+import time
 from sqs_utils import SQS_Utils
 from configparser import ConfigParser
 from execution_service import ExecutionService
@@ -17,6 +18,8 @@ class ExecutorConsumer:
 
     def start( self):
         while True:
+            time.sleep(2)
+            print(' Polling for messages')
             messages = self.sqs_utils.receive_messages( self.queue_name)
             for message in messages:
                 is_success = self.consume(message)

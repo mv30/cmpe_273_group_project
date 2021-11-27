@@ -164,7 +164,7 @@ if __name__ == '__main__':
     # res = execution_service.find_by_token('_a_sda_s__qw__wq')
 
     # version_4
-    execution_service.process_token('as01ass8123asd')
+    execution_service.process_token('zzsxa213987asda')
 
     print(type(res))
     print(res.get_entity())
