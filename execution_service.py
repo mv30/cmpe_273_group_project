@@ -105,8 +105,6 @@ class ExecutionService:
 
     def process_token( self, token):
         entry = self.find_by_token(token)
-        if entry.status != 'INIT':
-            return
 
         try:
 
@@ -139,9 +137,11 @@ class ExecutionService:
             with open(OUTPUT_FILE_PATH, 'rb') as output_file:
                 self.s3_helper.upload_file_ob(output_file, "{}/output.txt".format(token))
             self.update_record(ExecutionEntry( id=None, token=token, input_provided=None, status='SUCCESS', dependencies=None))
+            return True
         
         except:
             self.update_record(ExecutionEntry( id=None, token=token, input_provided=None, status='FAILED', result=None))
+            return False
 
 
 

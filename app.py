@@ -31,6 +31,14 @@ def handle_execute( token):
     sqs_helper.send_message( AWS_SQS_QUEUE_NAME, message_attributes, None)
     execution_helper.update_record( ExecutionEntry( None, token, None, 'ENQUEUED', None))
 
+def handle_poll( token):
+    res = {}
+    entry = execution_helper.find_by_token(token)
+    res['status'] = entry.status
+    if entry.status == 'SUCCESS':
+        res['url'] = s3_helper.get_presigned_url(token)
+    return res
+
 @app.route('/hello')
 def say_hello():
     return 'Hello'
@@ -54,3 +62,7 @@ def upload_input(token: str):
 def run_source_code(token: str):
     handle_execute(token)
     return 'Submitted for execution'
+
+@app.route('/poll/<token>', methods=['GET'])
+def poll_status(token):
+    return jsonify(handle_poll(token))

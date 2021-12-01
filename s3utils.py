@@ -21,11 +21,20 @@ class S3Utils:
 
     def download_file_ob( self, write_file_ob, storage_path):
         return self.s3.download_fileobj( self.bucket_name, storage_path, write_file_ob)
+    
+    def get_presigned_url( self, token):
+        return self.s3.generate_presigned_url('get_object',
+                                                        Params={'Bucket': 'execution-files',
+                                                            'Key': "{}/output.txt".format(token)},
+                                                    ExpiresIn=600)
 
     
 if __name__ == '__main__':
     s3utils = S3Utils()
+    url = s3utils.get_presigned_url('as01ass8123asd')
+    print(url)
     with open('/Users/mayankverma/CMPE-273/cmpe_273_group_project/test/sample_file.txt','rb') as file_ob:
         s3utils.upload_file_ob( file_ob, 'trials/sample.text')
     with open('./test/downloaded_test.txt','wb') as download_file:
         s3utils.download_file_ob( download_file, 'trials/sample.text')
+    

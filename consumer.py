@@ -29,6 +29,6 @@ class ExecutorConsumer:
     def consume( self, message):
         attributes, body = self.sqs_utils.unpack_message( message)
         token = attributes['token']
-        self.execution_helper.process_token(token)
+        return self.execution_helper.process_token(token)
 
 
