@@ -4,13 +4,15 @@ import * as DocumentPicker from 'expo-document-picker';
 import Header from './header';
 import Logo from './components/logo';
 import Secondary from './secondary';
+import faker from 'faker';
 
 export default function App() {
   const [file, setFile] = useState(null);
   const [fileStatus, setFileStatus] = useState('Complete');
   const [text, onChangeText] = useState('');
   const [outputFile, setOututFile] = useState('');
-  const hashcode = 'as01ass81';
+  //Change hashcode for every new call
+  const hashcode = faker.random.alphaNumeric(9);
 
 
   //Main python file upload
@@ -22,28 +24,22 @@ export default function App() {
     // console.log(result);
 
     if (result.type === 'success') {
-      console.log(result.uri)
-      var form = new FormData();
-      form.append('pythonFile',result.file);
+      // console.log(result.uri)
 
       //Source code upload
       fetch(
         `http://127.0.0.1:5000/upload-source-code/${hashcode}`,
         {
-          body: form,
+          body: result.file,
           method: "POST",
           headers: {
-            'Content-Type': 'application/octet-stream'
+            'Content-Type': 'text/plain'
           }
         }
       )
-      // .then((response) => response.json())
-      // .catch((error) => {
-      //   console.error(error);
-      // })
       .then((responseData) => {
         setFile(result.uri)
-        console.log("Success " + responseData)
+        console.log("Source code success " + result.file + ". Response = "  + responseData)
       }).catch((error) => console.error(error));
 
     }
@@ -58,7 +54,7 @@ export default function App() {
     // console.log(result);
 
     if (result.type === 'success') {
-      console.log(result.uri)
+      // console.log(result.uri)
 
       //Input file upload
       fetch(
@@ -71,12 +67,8 @@ export default function App() {
           }
         }
       )
-      // .then((response) => response.json())
-      // .catch((error) => {
-      //   console.error(error);
-      // })
       .then((responseData) => {
-        console.log("Success " + responseData)
+        console.log("Input file success " + result.file + ". Response = "  + responseData)
       }).catch((error) => console.error(error));
 
     }
@@ -95,12 +87,8 @@ export default function App() {
           }
         }
       )
-      // .then((response) => response.json())
-      // .catch((error) => {
-      //   console.error(error);
-      // })
       .then((responseData) => {
-        console.log("Success " + responseData)
+        console.log("Dependency Success")
       }).catch((error) => console.error(error));
   };
 
@@ -112,14 +100,11 @@ export default function App() {
           method: "POST"
         }
       )
-      // .then((response) => response.json())
-      // .catch((error) => {
-      //   console.error(error);
-      // })
       .then((responseData) => {
-        console.log("Success " + responseData)
+        console.log("Execute success. Response data = " + responseData)
       }).catch((error) => console.error(error));
 
+      //To run loading circle which only runs on null value
       setFileStatus(null);
 
 
@@ -131,18 +116,14 @@ export default function App() {
             method: "GET"
           }
         )
-        // .then((response) => response.json())
-        // .catch((error) => {
-        //   console.error(error);
-        // })
         .then((responseData) => {
           if(responseData.status === 'SUCCESS')  {
             setFileStatus('Complete');
             setOututFile(responseData.url);
-            setFileStatus(null);
+            console.log("File executed " + responseData.url)
             return;
           }
-          console.log("Success " + responseData)
+          console.log("Execution in progress " + responseData)
         }).catch((error) => console.error(error));
     }
   };
