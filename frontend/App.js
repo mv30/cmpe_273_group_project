@@ -11,8 +11,12 @@ export default function App() {
   const [fileStatus, setFileStatus] = useState('Complete');
   const [text, onChangeText] = useState('');
   const [outputFile, setOututFile] = useState('');
+<<<<<<< HEAD
   //Change hashcode for every new call
   const hashcode = faker.random.alphaNumeric(9);
+=======
+  const hashcode = 'as01ass81';
+>>>>>>> 263f32cb5f1014b18bf538c3b7475add1308da32
 
 
   //Main python file upload
@@ -28,15 +32,27 @@ export default function App() {
 
       //Source code upload
       fetch(
+<<<<<<< HEAD
         `http://127.0.0.1:5000/upload-source-code/${hashcode}`,
+=======
+        'http://127.0.0.1:5000/upload-source-code/as01ass81',
+>>>>>>> 263f32cb5f1014b18bf538c3b7475add1308da32
         {
           body: result.file,
           method: "POST",
+          mode: 'no-cors',
           headers: {
             'Content-Type': 'text/plain'
           }
         }
       )
+<<<<<<< HEAD
+=======
+      // .then((response) => response.json())
+      // .catch((error) => {
+      //   console.error(error);
+      // })
+>>>>>>> 263f32cb5f1014b18bf538c3b7475add1308da32
       .then((responseData) => {
         setFile(result.uri)
         console.log("Source code success " + result.file + ". Response = "  + responseData)
@@ -67,6 +83,13 @@ export default function App() {
           }
         }
       )
+<<<<<<< HEAD
+=======
+      // .then((response) => response.json())
+      // .catch((error) => {
+      //   console.error(error);
+      // })
+>>>>>>> 263f32cb5f1014b18bf538c3b7475add1308da32
       .then((responseData) => {
         console.log("Input file success " + result.file + ". Response = "  + responseData)
       }).catch((error) => console.error(error));
@@ -87,6 +110,13 @@ export default function App() {
           }
         }
       )
+<<<<<<< HEAD
+=======
+      // .then((response) => response.json())
+      // .catch((error) => {
+      //   console.error(error);
+      // })
+>>>>>>> 263f32cb5f1014b18bf538c3b7475add1308da32
       .then((responseData) => {
         console.log("Dependency Success")
       }).catch((error) => console.error(error));
@@ -100,6 +130,13 @@ export default function App() {
           method: "POST"
         }
       )
+<<<<<<< HEAD
+=======
+      // .then((response) => response.json())
+      // .catch((error) => {
+      //   console.error(error);
+      // })
+>>>>>>> 263f32cb5f1014b18bf538c3b7475add1308da32
       .then((responseData) => {
         console.log("Execute success. Response data = " + responseData)
       }).catch((error) => console.error(error));
@@ -116,14 +153,28 @@ export default function App() {
             method: "GET"
           }
         )
+<<<<<<< HEAD
+=======
+        // .then((response) => response.json())
+        // .catch((error) => {
+        //   console.error(error);
+        // })
+>>>>>>> 263f32cb5f1014b18bf538c3b7475add1308da32
         .then((responseData) => {
           if(responseData.status === 'SUCCESS')  {
             setFileStatus('Complete');
             setOututFile(responseData.url);
+<<<<<<< HEAD
             console.log("File executed " + responseData.url)
             return;
           }
           console.log("Execution in progress " + responseData)
+=======
+            setFileStatus(null);
+            return;
+          }
+          console.log("Success " + responseData)
+>>>>>>> 263f32cb5f1014b18bf538c3b7475add1308da32
         }).catch((error) => console.error(error));
     }
   };

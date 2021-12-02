@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from s3utils import S3Utils
 from execution_service import ExecutionEntity, ExecutionEntry, ExecutionService
 from sqs_utils import SQS_Utils
@@ -12,6 +13,7 @@ s3_helper = S3Utils()
 sqs_helper = SQS_Utils(AWS_SQS_QUEUE_NAME)
 execution_helper = ExecutionService()
 app = Flask(__name__)
+CORS(app)
 
 def handle_upload_source_code( token, file_ob):
     execution_helper.create_record(ExecutionEntry( None, token, None, 'INIT', []))
