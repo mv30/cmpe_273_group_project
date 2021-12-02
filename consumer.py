@@ -38,11 +38,13 @@ class ExecutorConsumer:
 
 
 if __name__ == '__main__':
-    # executor = ExecutorConsumer('worker')
-    # executor.start('Worker')
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
-    consumers = [ ExecutorConsumer('Worker 1'), ExecutorConsumer('Worker 2') ]
-    executor.map(consumers[0].start)
-    executor.map(consumers[1].start)
+    executor = ExecutorConsumer('worker')
+    executor.start('Worker')
+    # consumers = [ ExecutorConsumer('Worker 1'), ExecutorConsumer('Worker 2') ]
+    # executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
+    # executor.submit( consumers[0].start, 'Worker 1')
+    # executor.submit( consumers[1].start, 'Worker 2')
+    # # executor.map(consumers[0].start)
+    # # executor.map(consumers[1].start)
 
 

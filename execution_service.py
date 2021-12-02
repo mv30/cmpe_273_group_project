@@ -106,44 +106,44 @@ class ExecutionService:
     def process_token( self, token):
         entry = self.find_by_token(token)
 
-        try:
+        # try:
 
-            cwd = os.getcwd()
-            directory = "{}/var/{}".format( cwd, token)
-            if not os.path.isdir(directory):
-                os.mkdir(directory)
+        cwd = os.getcwd()
+        directory = "{}/var/{}".format( cwd, token)
+        if not os.path.isdir(directory):
+            os.mkdir(directory)
 
-            SOURCE_CODE_FILE_PATH = "./var/{}/source_code.py".format(token)
-            INPUT_FILE_PATH = "./var/{}/input.txt".format(token)
-            OUTPUT_FILE_PATH = "./var/{}/output.txt".format(token)
-            DOCKER_FILE_PATH = "./var/{}/Dockerfile".format(token)
-            DOCKER_BUILD_COMMAND = " docker build -t {} ./var/{} ".format(token, token)
-            DOCKER_RUN_COMMAND = " docker run --rm -i {} {} > {} "
-            INPUT_COMMAND_COMPONENT = ''
+        SOURCE_CODE_FILE_PATH = "./var/{}/source_code.py".format(token)
+        INPUT_FILE_PATH = "./var/{}/input.txt".format(token)
+        OUTPUT_FILE_PATH = "./var/{}/output.txt".format(token)
+        DOCKER_FILE_PATH = "./var/{}/Dockerfile".format(token)
+        DOCKER_BUILD_COMMAND = " docker build -t {} ./var/{} ".format(token, token)
+        DOCKER_RUN_COMMAND = " docker run --rm -i {} {} > {} "
+        INPUT_COMMAND_COMPONENT = ''
 
-            with open( SOURCE_CODE_FILE_PATH, 'wb') as source_code_file:
-                self.s3_helper.download_file_ob( source_code_file, "{}/source_code.py".format(token))
-            if entry.input_provided:
-                INPUT_COMMAND_COMPONENT = " < {} ".format(INPUT_FILE_PATH)
-                with open( INPUT_FILE_PATH, 'wb') as input_file:
-                    self.s3_helper.download_file_ob( input_file, "{}/input.txt".format(token))
-            with open( DOCKER_FILE_PATH, 'w') as docker_file:
-                self.docker_helper.gen_file( docker_file, entry.dependencies)
-            
-            DOCKER_RUN_COMMAND = DOCKER_RUN_COMMAND.format(token, INPUT_COMMAND_COMPONENT, OUTPUT_FILE_PATH)
-            
-            # execute command
-            os.system(DOCKER_BUILD_COMMAND)
-            os.system(DOCKER_RUN_COMMAND)
-
-            with open(OUTPUT_FILE_PATH, 'rb') as output_file:
-                self.s3_helper.upload_file_ob(output_file, "{}/output.txt".format(token))
-            self.update_record(ExecutionEntry( id=None, token=token, input_provided=None, status='SUCCESS', dependencies=None))
-            return True
+        with open( SOURCE_CODE_FILE_PATH, 'wb') as source_code_file:
+            self.s3_helper.download_file_ob( source_code_file, "{}/source_code.py".format(token))
+        if entry.input_provided:
+            INPUT_COMMAND_COMPONENT = " < {} ".format(INPUT_FILE_PATH)
+            with open( INPUT_FILE_PATH, 'wb') as input_file:
+                self.s3_helper.download_file_ob( input_file, "{}/input.txt".format(token))
+        with open( DOCKER_FILE_PATH, 'w') as docker_file:
+            self.docker_helper.gen_file( docker_file, entry.dependencies)
         
-        except:
-            self.update_record(ExecutionEntry( id=None, token=token, input_provided=None, status='SUCCESS', dependencies=None))
-            return False
+        DOCKER_RUN_COMMAND = DOCKER_RUN_COMMAND.format(token, INPUT_COMMAND_COMPONENT, OUTPUT_FILE_PATH)
+        
+        # execute command
+        os.system(DOCKER_BUILD_COMMAND)
+        os.system(DOCKER_RUN_COMMAND)
+
+        with open(OUTPUT_FILE_PATH, 'rb') as output_file:
+            self.s3_helper.upload_file_ob(output_file, "{}/output.txt".format(token))
+        self.update_record(ExecutionEntry( id=None, token=token, input_provided=None, status='SUCCESS', dependencies=None))
+        return True
+        
+        # except:
+        #     self.update_record(ExecutionEntry( id=None, token=token, input_provided=None, status='SUCCESS', dependencies=None))
+        #     return False
 
 
 
