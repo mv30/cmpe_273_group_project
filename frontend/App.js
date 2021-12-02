@@ -9,6 +9,9 @@ export default function App() {
   const [file, setFile] = useState(null);
   const [fileStatus, setFileStatus] = useState('Complete');
   const [text, onChangeText] = useState('');
+  const [outputFile, setOututFile] = useState('');
+  const hashcode = 'as01ass81';
+
 
   //Main python file upload
   const pickFile = async () => {
@@ -25,7 +28,7 @@ export default function App() {
 
       //Source code upload
       fetch(
-        'http://127.0.0.1:5000/upload-source-code/as01ass8123asd',
+        `http://127.0.0.1:5000/upload-source-code/${hashcode}`,
         {
           body: form,
           method: "POST",
@@ -33,10 +36,11 @@ export default function App() {
             'Content-Type': 'application/octet-stream'
           }
         }
-      ).then((response) => response.json())
-      .catch((error) => {
-        console.error(error);
-      })
+      )
+      // .then((response) => response.json())
+      // .catch((error) => {
+      //   console.error(error);
+      // })
       .then((responseData) => {
         setFile(result.uri)
         console.log("Success " + responseData)
@@ -58,7 +62,7 @@ export default function App() {
 
       //Input file upload
       fetch(
-        'http://127.0.0.1:5000/upload-input/as01ass8123asd',
+        `http://127.0.0.1:5000/upload-input/${hashcode}`,
         {
           body: result.file,
           method: "POST",
@@ -66,10 +70,11 @@ export default function App() {
             'Content-Type': 'text/plain'
           }
         }
-      ).then((response) => response.json())
-      .catch((error) => {
-        console.error(error);
-      })
+      )
+      // .then((response) => response.json())
+      // .catch((error) => {
+      //   console.error(error);
+      // })
       .then((responseData) => {
         console.log("Success " + responseData)
       }).catch((error) => console.error(error));
@@ -81,7 +86,7 @@ export default function App() {
   //Dependency upload
   const addDependencies = async () => {
     fetch(
-        'http://127.0.0.1:5000/add-dependecies/zzsxa213987asda',
+        `http://127.0.0.1:5000/add-dependecies/${hashcode}`,
         {
           body: text,
           method: "POST",
@@ -89,10 +94,11 @@ export default function App() {
             'Content-Type': 'application/json'
           }
         }
-      ).then((response) => response.json())
-      .catch((error) => {
-        console.error(error);
-      })
+      )
+      // .then((response) => response.json())
+      // .catch((error) => {
+      //   console.error(error);
+      // })
       .then((responseData) => {
         console.log("Success " + responseData)
       }).catch((error) => console.error(error));
@@ -101,14 +107,15 @@ export default function App() {
   //Execute File
   const executeFile = async () => {
     fetch(
-        'http://127.0.0.1:5000/execute/helloworld',
+        `http://127.0.0.1:5000/execute/${hashcode}`,
         {
           method: "POST"
         }
-      ).then((response) => response.json())
-      .catch((error) => {
-        console.error(error);
-      })
+      )
+      // .then((response) => response.json())
+      // .catch((error) => {
+      //   console.error(error);
+      // })
       .then((responseData) => {
         console.log("Success " + responseData)
       }).catch((error) => console.error(error));
@@ -117,21 +124,27 @@ export default function App() {
 
 
       //Check execution
-      fetch(
-        'http://127.0.0.1:5000/poll/as01ass8123asd',
-        {
-          method: "GET"
-        }
-      ).then((response) => response.json())
-      .catch((error) => {
-        console.error(error);
-      })
-      .then((responseData) => {
-        if(responseData.status === 'SUCCESS')  {
-          setFileStatus('Complete');
-        }
-        console.log("Success " + responseData)
-      }).catch((error) => console.error(error));
+      while(true) {
+          fetch(
+          `http://127.0.0.1:5000/poll/${hashcode}`,
+          {
+            method: "GET"
+          }
+        )
+        // .then((response) => response.json())
+        // .catch((error) => {
+        //   console.error(error);
+        // })
+        .then((responseData) => {
+          if(responseData.status === 'SUCCESS')  {
+            setFileStatus('Complete');
+            setOututFile(responseData.url);
+            setFileStatus(null);
+            return;
+          }
+          console.log("Success " + responseData)
+        }).catch((error) => console.error(error));
+    }
   };
 
 
@@ -147,6 +160,7 @@ export default function App() {
       {file && <Header>Your file is being uploaded and it will execute on the server.</Header> && <br/> && <br/> && <br/>}<br/><br/><br/>
       <Button title="Execute Python File" onPress={addDependencies && executeFile}></Button>
       {!fileStatus && <ActivityIndicator size="large" color="#0000ff" />}
+      {<Secondary>Output can be downloaded from this url - </Secondary> && outputFile}
     </View>
   );
 }
