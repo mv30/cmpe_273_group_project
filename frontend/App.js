@@ -7,16 +7,19 @@ import Secondary from './secondary';
 import faker from 'faker';
 
 export default function App() {
+
   const [file, setFile] = useState(null);
-  const [fileStatus, setFileStatus] = useState('Complete');
   const [text, onChangeText] = useState('');
   const [outputFile, setOututFile] = useState('');
   //Change hashcode for every new call
   const hashcode = faker.random.alphaNumeric(9);
-
+  // const [hashcode, setHashCode] = useState('nuiuvenui');
+  const [fileStatus, setFileStatus] = useState('Complete');
+  console.log(hashcode);
 
   //Main python file upload
   const pickFile = async () => {
+    console.log(hashcode);
     let result = await DocumentPicker.getDocumentAsync({
       allowsEditing: false,
       quality: 1,
@@ -32,7 +35,6 @@ export default function App() {
         {
           body: result.file,
           method: "POST",
-          mode: 'no-cors',
           headers: {
             'Content-Type': 'text/plain'
           }
@@ -48,6 +50,7 @@ export default function App() {
 
   //Input file upload
   const pickHelpingFile = async () => {
+    console.log(hashcode);
     let result = await DocumentPicker.getDocumentAsync({
       allowsEditing: false,
       quality: 1,
@@ -78,12 +81,14 @@ export default function App() {
 
   //Dependency upload
   const addDependencies = async () => {
+    console.log(hashcode);
     fetch(
         `http://127.0.0.1:5000/add-dependecies/${hashcode}`,
         {
-          body: text,
+          body: JSON.stringify(text),
           method: "POST",
           headers: {
+            'Accept': 'application/json',
             'Content-Type': 'application/json'
           }
         }
@@ -95,6 +100,7 @@ export default function App() {
 
   //Execute File
   const executeFile = async () => {
+    console.log(hashcode);
     fetch(
         `http://127.0.0.1:5000/execute/${hashcode}`,
         {
@@ -102,16 +108,16 @@ export default function App() {
         }
       )
       .then((responseData) => {
-        console.log("Execute success. Response data = " + responseData)
+        console.log("Execute success. Response data = " + responseData);
+        //To run loading circle which only runs on null value
+        setFileStatus(null);
       }).catch((error) => console.error(error));
-
-      //To run loading circle which only runs on null value
-      setFileStatus(null);
 
 
       //Check execution
-      while(true) {
-          fetch(
+      let interval = setInterval(() => {
+        console.log("Running");
+        fetch(
           `http://127.0.0.1:5000/poll/${hashcode}`,
           {
             method: "GET"
@@ -122,14 +128,13 @@ export default function App() {
             setFileStatus('Complete');
             setOututFile(responseData.url);
             console.log("File executed " + responseData.url)
+            clearInterval(interval);
             return;
           }
           console.log("Execution in progress " + responseData)
         }).catch((error) => console.error(error));
-    }
+      }, 3000);
   };
-
-
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -138,9 +143,10 @@ export default function App() {
       <Button title="Pick python file(.py) from storage" onPress={pickFile} /> <br/><br/><br/>
       <Button title="Pick optional supporting input file" onPress={pickHelpingFile} /> <br/><br/><br/>
       <Secondary>Add dependencies in json format</Secondary>
-      <TextInput style={styles.input} onChangeText={onChangeText} value={text} /> <br/><br/><br/>
+      <TextInput style={styles.input} onChangeText={onChangeText} value={text} />
+      <Button title="Add Dependencies" onPress={addDependencies} /> <br/><br/><br/>
       {file && <Header>Your file is being uploaded and it will execute on the server.</Header> && <br/> && <br/> && <br/>}<br/><br/><br/>
-      <Button title="Execute Python File" onPress={addDependencies && executeFile}></Button>
+      <Button title="Execute Python File" onPress={executeFile}></Button>
       {!fileStatus && <ActivityIndicator size="large" color="#0000ff" />}
       {<Secondary>Output can be downloaded from this url - </Secondary> && outputFile}
     </View>
