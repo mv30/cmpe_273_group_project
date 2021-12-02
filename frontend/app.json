@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "CMPE273-PythonUI",
+    "slug": "CMPE273-PythonUI",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "CMPE273-PythonUI"
+}
