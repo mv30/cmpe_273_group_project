@@ -109,7 +109,9 @@ class ExecutionService:
         try:
 
             cwd = os.getcwd()
-            os.mkdir("{}/var/{}".format( cwd, token))
+            directory = "{}/var/{}".format( cwd, token)
+            if not os.path.isdir(directory):
+                os.mkdir(directory)
 
             SOURCE_CODE_FILE_PATH = "./var/{}/source_code.py".format(token)
             INPUT_FILE_PATH = "./var/{}/input.txt".format(token)
@@ -140,7 +142,7 @@ class ExecutionService:
             return True
         
         except:
-            self.update_record(ExecutionEntry( id=None, token=token, input_provided=None, status='FAILED', result=None))
+            self.update_record(ExecutionEntry( id=None, token=token, input_provided=None, status='SUCCESS', dependencies=None))
             return False
 
 

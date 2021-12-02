@@ -28,7 +28,7 @@ def handle_execute( token):
     message_attributes = {
         'token' : token
     }
-    sqs_helper.send_message( AWS_SQS_QUEUE_NAME, message_attributes, None)
+    sqs_helper.send_message( message_attributes, None)
     execution_helper.update_record( ExecutionEntry( None, token, None, 'ENQUEUED', None))
 
 def handle_poll( token):
