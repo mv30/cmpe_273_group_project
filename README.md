@@ -1,5 +1,7 @@
 # cmpe_273_group_project
 
+![Architecture Diagram](CMPE273_Architecture_Diagram.jpg)
+
 #### project flow:
 
 file i/p genrate unique id => put file in s3 with auto key
