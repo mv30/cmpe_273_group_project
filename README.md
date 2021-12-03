@@ -1,4 +1,7 @@
 # cmpe_273_group_project
+<h3>Python Remote Execution Framework</h3>
+
+<h3>Architecture Diagram</h3>
 
 ![Architecture Diagram](CMPE273_Architecture_Diagram.jpg)
 
