@@ -12,7 +12,7 @@ export default function App() {
   const [text, onChangeText] = useState('');
   const [outputFile, setOututFile] = useState('');
   //Change hashcode for every new call
-  const hashcode = faker.random.alphaNumeric(9);
+  const hashcode = 'hello_world_trials_4';
   // const [hashcode, setHashCode] = useState('nuiuvenui');
   const [fileStatus, setFileStatus] = useState('Complete');
   console.log(hashcode);
@@ -85,10 +85,10 @@ export default function App() {
     fetch(
         `http://127.0.0.1:5000/add-dependecies/${hashcode}`,
         {
-          body: JSON.stringify(text),
+          body: text,
           method: "POST",
           headers: {
-            'Accept': 'application/json',
+            // 'Accept': 'application/json',
             'Content-Type': 'application/json'
           }
         }
@@ -122,7 +122,9 @@ export default function App() {
           {
             method: "GET"
           }
-        )
+        ).then((response) => {
+          return response.json()
+      })
         .then((responseData) => {
           if(responseData.status === 'SUCCESS')  {
             setFileStatus('Complete');
